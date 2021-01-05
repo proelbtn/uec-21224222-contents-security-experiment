@@ -1,5 +1,7 @@
 package kadai1.contentssecurity;
 
+import utils.Matrix;
+
 import java.io.*;
 import java.util.*;
 
@@ -28,7 +30,7 @@ public class Main {
         ListIterator<String[]> rowIter = data.listIterator(1);
         for (int r = 0; rowIter.hasNext(); r++) {
             row = rowIter.next();
-            for (int c = 1; c != row.length; c++)
+            for (int c = 1; c < row.length; c++)
                 array[r][c-1] = Double.parseDouble(row[c]);
         }
 
