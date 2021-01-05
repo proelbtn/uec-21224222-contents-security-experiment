@@ -39,6 +39,35 @@ public class Matrix {
         return inverse(this);
     }
 
+    public MatrixPair vsplit(int row) throws IllegalArgumentException {
+        if (!(0 <= row && row < this.rows)) throw new IllegalArgumentException("row is invalid");
+
+        double[][] upper = new double[row + 1][];
+        double[][] bottom = new double[this.rows - row][];
+
+        for (int r = 0; r <= row; r++) upper[r] = this.array[r].clone();
+
+        for (int r = row + 1; r <= this.rows; r++) bottom[r] = this.array[r].clone();
+
+        return new MatrixPair(new Matrix(upper), new Matrix(bottom));
+    }
+
+    public MatrixPair hsplit(int col) throws IllegalArgumentException {
+        if (!(0 <= col && col < this.cols)) throw new IllegalArgumentException("col is invalid");
+
+        double[][] left = new double[this.rows][col + 1];
+        double[][] right = new double[this.rows][this.cols - col];
+
+        for (int r = 0; r <= this.rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (c <= col) left[r][c] = this.array[r][c];
+                else right[r][c - (col + 1)] = this.array[r][c];
+            }
+        }
+
+        return new MatrixPair(new Matrix(left), new Matrix(right));
+    }
+
     public static Matrix multiply(Matrix A, Matrix B) throws IllegalArgumentException {
         if (A.cols != B.rows) throw new IllegalArgumentException("multiply expects that A.cols == B.rows");
 
