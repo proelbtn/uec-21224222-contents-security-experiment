@@ -1,7 +1,7 @@
-package contentssecurity;
+package kadai2.TYUUGAKU.contentssecurity;
 
-import java.io.*;
-import java.net.*;
+// import java.io.*;
+// import java.net.*;
 
 public class Main {
 
