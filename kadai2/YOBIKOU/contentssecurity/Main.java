@@ -46,46 +46,46 @@ public class Main {
 
 		Matrix B = load_matrix_from_csv("./omomi.txt");
 		Matrix S = load_matrix_from_csv("./saiteiten.txt");
+
+		System.out.println("重み行列");
 		B.printMatrix(System.out);
+
+		System.out.println("合格最低点");
 		S.printMatrix(System.out);
 
 		buf = connector.getTable();
 		Matrix M = new Matrix(buf);
-		M.printMatrix(System.out);
 
 		MatrixPair MiP = M.inverse().vsplit(3);
 		Matrix Mitop = MiP.first;
 		Matrix Mibottom = MiP.second;
-		Mitop.printMatrix(System.out);
-		Mibottom.printMatrix(System.out);
 
 		buf = connector.getTable();
 		Matrix Ap = new Matrix(buf);
-		Ap.printMatrix(System.out);
 
 		Matrix Bp = Mibottom.multiply(B);
-		Bp.printMatrix(System.out);
 
 		connector.sendTable(Bp.array);
 
 		Matrix Bpp = Ap.multiply(Mitop).multiply(B);
-		Bpp.printMatrix(System.out);
 
 		buf = connector.getTable();
 		Matrix App = new Matrix(buf);
-		App.printMatrix(System.out);
 
-		Matrix Ans = App.add(Bpp);
-		Ans.printMatrix(System.out);
+		Matrix res = App.add(Bpp);
+
+		System.out.println("適性行列");
+		res.printMatrix(System.out);
+
+		for (int r = 0; r < res.rows; r++) {
+			for (int c = 0; c < res.cols; c++) {
+				res.array[r][c] = res.array[r][c] >= S.array[0][c] ? 1.0 : 0.0;
+			}
+		}
+
+		connector.sendTable(res.array);
 
 		connector.endConnection();
 	}
-
-	/*
-	// メソッド(関数)の記述例
-	private static void method(double argument) {
-		// 処理を記述
-	}
-	*/
 }
 

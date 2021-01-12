@@ -55,7 +55,11 @@ public class Main {
 
 		Matrix A = load_matrix_from_csv("./seiseki.txt");
 		Matrix M = new Matrix(m);
+
+		System.out.println("成績行列");
 		A.printMatrix(System.out);
+
+		System.out.println("乱数行列");
 		M.printMatrix(System.out);
 
 		connector.sendTable(M.array);
@@ -63,31 +67,25 @@ public class Main {
 		MatrixPair MP = M.hsplit(3);
 		Matrix Mleft = MP.first;
 		Matrix Mright = MP.second;
-		Mleft.printMatrix(System.out);
-		Mright.printMatrix(System.out);
 
 		Matrix Ap = A.multiply(Mleft);
-		Ap.printMatrix(System.out);
 
 		connector.sendTable(Ap.array);
 
 		buf = connector.getTable();
 		Matrix Bp = new Matrix(buf);
-		Bp.printMatrix(System.out);
 
 		Matrix App = A.multiply(Mright).multiply(Bp);
-		App.printMatrix(System.out);
 
 		connector.sendTable(App.array);
 
+		buf = connector.getTable();
+		Matrix res = new Matrix(buf);
+
+		System.out.println("合否行列");
+		res.printMatrix(System.out);
+
 		connector.endConnection();
 	}
-
-	/*
-	// メソッド(関数)の記述例
-	private static void method(double argument) {
-		// 処理を記述
-	}
-	*/
 }
 

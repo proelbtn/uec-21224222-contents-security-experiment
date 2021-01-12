@@ -19,7 +19,7 @@ public class Matrix {
     }
 
     @Override
-    protected Matrix clone() {
+    public Matrix clone() {
         return new Matrix(this.array);
     }
 
