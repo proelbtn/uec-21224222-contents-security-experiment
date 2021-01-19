@@ -3,9 +3,9 @@ package utils;
 import java.io.PrintStream;
 
 public class Matrix {
-    int cols;           // the number of columns in matrix
-    int rows;           // the number of rows in matrix
-    double[][] array;   // the data of matrix
+    public int cols;           // the number of columns in matrix
+    public int rows;           // the number of rows in matrix
+    public double[][] array;   // the data of matrix
 
     public Matrix(double[][] array) throws IllegalArgumentException {
         this.rows = array.length;
@@ -31,6 +31,10 @@ public class Matrix {
         }
     }
 
+    public Matrix add(Matrix B) throws IllegalArgumentException {
+        return add(this, B);
+    }
+
     public Matrix multiply(Matrix B) throws IllegalArgumentException {
         return multiply(this, B);
     }
@@ -40,32 +44,49 @@ public class Matrix {
     }
 
     public MatrixPair vsplit(int row) throws IllegalArgumentException {
-        if (!(0 <= row && row < this.rows)) throw new IllegalArgumentException("row is invalid");
+        if (!(0 < row && row < this.rows)) throw new IllegalArgumentException("row is invalid");
 
-        double[][] upper = new double[row + 1][];
+        double[][] upper = new double[row][];
         double[][] bottom = new double[this.rows - row][];
 
-        for (int r = 0; r <= row; r++) upper[r] = this.array[r].clone();
+        for (int r = 0; r < row; r++) upper[r] = this.array[r].clone();
 
-        for (int r = row + 1; r <= this.rows; r++) bottom[r] = this.array[r].clone();
+        for (int r = row; r <= this.rows; r++) bottom[r - (row + 1)] = this.array[r].clone();
 
         return new MatrixPair(new Matrix(upper), new Matrix(bottom));
     }
 
     public MatrixPair hsplit(int col) throws IllegalArgumentException {
-        if (!(0 <= col && col < this.cols)) throw new IllegalArgumentException("col is invalid");
+        if (!(0 < col && col < this.cols)) throw new IllegalArgumentException("col is invalid");
 
-        double[][] left = new double[this.rows][col + 1];
+        double[][] left = new double[this.rows][col];
         double[][] right = new double[this.rows][this.cols - col];
 
-        for (int r = 0; r <= this.rows; r++) {
+        for (int r = 0; r < this.rows; r++) {
             for (int c = 0; c < cols; c++) {
-                if (c <= col) left[r][c] = this.array[r][c];
-                else right[r][c - (col + 1)] = this.array[r][c];
+                if (c < col) left[r][c] = this.array[r][c];
+                else right[r][c - col] = this.array[r][c];
             }
         }
 
         return new MatrixPair(new Matrix(left), new Matrix(right));
+    }
+
+    public static Matrix add(Matrix A, Matrix B) throws IllegalArgumentException {
+        if (A.cols != B.cols) throw new IllegalArgumentException("add expects that A.cols == B.cols");
+        if (A.rows != B.rows) throw new IllegalArgumentException("add expects that A.rows == B.rows");
+
+        int rows = A.rows;
+        int cols = A.cols;
+
+        double[][] array = new double[rows][cols];
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                array[r][c] = A.array[r][c] + B.array[r][c];
+            }
+        }
+
+        return new Matrix(array);
     }
 
     public static Matrix multiply(Matrix A, Matrix B) throws IllegalArgumentException {
