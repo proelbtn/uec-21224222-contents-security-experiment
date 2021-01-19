@@ -17,7 +17,11 @@ public class Main {
 
         LinkedList<String[]> data = new LinkedList<>();
         String row;
-        while ((row = br.readLine()) != null) data.add(row.split(","));
+		while ((row = br.readLine()) != null) data.add(row.split(","));
+		
+		br.close();
+        isr.close();
+        fis.close();
 
         return data;
     }

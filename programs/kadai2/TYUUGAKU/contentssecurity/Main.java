@@ -17,7 +17,11 @@ public class Main {
 
         LinkedList<String[]> data = new LinkedList<>();
         String row;
-        while ((row = br.readLine()) != null) data.add(row.split(","));
+		while ((row = br.readLine()) != null) data.add(row.split(","));
+		
+		br.close();
+        isr.close();
+        fis.close();
 
         return data;
     }
@@ -39,6 +43,27 @@ public class Main {
         }
 
         return new Matrix(array);
+	}
+
+	public static void save_gouhi_matrix(String filename, Matrix matrix) throws Exception {
+        FileOutputStream fos = new FileOutputStream(filename);
+        OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+        BufferedWriter bw = new BufferedWriter(osw);
+        PrintWriter pw = new PrintWriter(bw);
+
+        pw.println("合否行列,高校A,高校B,高校C,高校D");
+        for (int r = 0; r < matrix.rows; r++) {
+            pw.printf("生徒%d", r+1);
+            for (int c = 0; c < matrix.cols; c++) {
+                pw.printf(",%d", (int)matrix.array[r][c]);
+            }
+            pw.print("\n");
+        }
+
+        pw.close();
+        bw.close();
+        osw.close();
+        fos.close();
     }
 	
 	public static void main(String[] args) throws Exception {
@@ -84,6 +109,8 @@ public class Main {
 
 		System.out.println("合否行列");
 		res.printMatrix(System.out);
+
+		save_gouhi_matrix("./gouhi.txt", res);
 
 		connector.endConnection();
 	}
